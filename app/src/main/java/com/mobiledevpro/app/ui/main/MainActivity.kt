@@ -8,10 +8,9 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.updatePadding
 import androidx.lifecycle.Observer
 import com.mobiledevpro.app.R
+import com.mobiledevpro.app.common.BaseFragmentInterface
 import com.mobiledevpro.app.ui.main.viemodel.MainViewModel
-import com.mobiledevpro.app.utils.FabActionNavigation
-import com.mobiledevpro.app.utils.Navigation
-import com.mobiledevpro.app.utils.showCountiesList
+import com.mobiledevpro.app.utils.*
 import com.mobiledevpro.commons.activity.BaseActivity
 import com.mobiledevpro.commons.helpers.BaseResourcesHelper
 import kotlinx.android.synthetic.main.activity_main.*
@@ -46,6 +45,28 @@ class MainActivity : BaseActivity() {
         //work with view here
 
         observeEvents()
+    }
+
+    override fun onBackPressed() {
+
+        with(supportFragmentManager.findFragmentById(R.id.fragment_nav_host)?.childFragmentManager?.fragments?.get(0)) {
+            if (this is BaseFragmentInterface) {
+
+                val position: IntArray = fab_main_action?.findLocationOfCenterOnTheScreen()
+                    ?: IntArray(2)
+
+                this.view?.exitCircularReveal(position) {
+                    super.onBackPressed()
+                } ?: super.onBackPressed()
+
+            } else {
+                super.onBackPressed()
+            }
+
+        }
+
+
+        // super.onBackPressed()
     }
 
     private fun observeEvents() {

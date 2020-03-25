@@ -8,12 +8,16 @@ import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.mobiledevpro.app.R
+import com.mobiledevpro.app.common.BaseFragmentInterface
 import com.mobiledevpro.app.databinding.FragmentCountriesListBinding
 import com.mobiledevpro.app.ui.countries.adapter.CountriesListAdapter
 import com.mobiledevpro.app.ui.main.viemodel.MainViewModel
 import com.mobiledevpro.app.ui.total.viewmodel.TotalViewModel
 import com.mobiledevpro.app.utils.Navigation
+import com.mobiledevpro.app.utils.findLocationOfCenterOnTheScreen
+import com.mobiledevpro.app.utils.startCircularReveal
 import com.mobiledevpro.commons.fragment.BaseFragment
+import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_countries_list.*
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 
@@ -25,7 +29,7 @@ import org.koin.androidx.viewmodel.ext.android.sharedViewModel
  * http://androiddev.pro
  *
  */
-class CountriesListFragment : BaseFragment() {
+class CountriesListFragment : BaseFragment(), BaseFragmentInterface {
     private val totalViewModel: TotalViewModel by sharedViewModel()
     private val mainViewModel: MainViewModel by sharedViewModel()
 
@@ -52,6 +56,10 @@ class CountriesListFragment : BaseFragment() {
         super.onViewCreated(view, savedInstanceState)
         initRecyclerView()
         observeEvents()
+
+        val position: IntArray = fab_main_action?.findLocationOfCenterOnTheScreen() ?: IntArray(2)
+        view.startCircularReveal(false)
+        // view.exitCircularReveal(position, {/**/ })
     }
 
     override fun initPresenters() {
@@ -67,6 +75,19 @@ class CountriesListFragment : BaseFragment() {
     override fun onStart() {
         super.onStart()
         mainViewModel.setFabActionShowCountrySearch()
+    }
+
+    override fun onStop() {
+        /*   val position: IntArray = fab_main_action?.findLocationOfCenterOnTheScreen() ?: IntArray(2)
+           //  view.startCircularReveal(false)
+           view?.exitCircularReveal(position, {/**/ })
+
+         */
+        super.onStop()
+    }
+
+    override fun onBackPressed() {
+        TODO("Not yet implemented")
     }
 
     private fun initRecyclerView() {
